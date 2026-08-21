@@ -1,0 +1,508 @@
+/* ===========================================================================
+   Promittens Technologies — Desk theme (promit10sui)
+   Presentation-only override. Selectors verified against this bench's
+   apps/frappe v16 source (theme_switcher.js, base_list.js, base_widget.js,
+   sidebar.html, login.html, desktop.scss) — not guessed.
+   =========================================================================== */
+
+:root {
+	--pt-primary: #1F6FA8;
+	--pt-primary-dark: #124A73;
+	--pt-accent: #25A6E0;
+	--pt-ink: #141922;
+	--pt-text-secondary: #5F5E5A;
+	--pt-text-muted: #888780;
+	--pt-border: #E9ECF0;
+	--pt-border-soft: #EDF1F5;
+	--pt-sidebar-bg: #F7F9FB;
+	--pt-sidebar-solid: #2070A8;
+	--pt-surface: #FFFFFF;
+
+	/* Frappe Desk theme variables (frappe/public/scss/common/_variables.scss) */
+	--primary-color: var(--pt-primary);
+	--primary: var(--pt-primary);
+	--dark-border-color: var(--pt-primary-dark);
+	--link-color: var(--pt-primary);
+	--btn-primary: var(--pt-primary);
+}
+
+/* ---------------------------------------------------------------------------
+   1. Navbar
+   --------------------------------------------------------------------------- */
+.navbar {
+	background-color: var(--pt-sidebar-solid) !important;
+	border-bottom: 1px solid var(--pt-primary-dark);
+	--icon-stroke: #FFFFFF !important;
+}
+.navbar,
+.navbar a,
+.navbar .text-muted,
+#navbar-breadcrumbs,
+#navbar-breadcrumbs a {
+	color: #FFFFFF !important;
+}
+.navbar-brand img,
+.navbar .app-logo {
+	height: 24px !important;
+	width: auto !important;
+	object-fit: contain;
+}
+/* collapsed search trigger ("Search  Ctrl+K") — awesome_bar.js / search.js */
+.navbar .navbar-search-bar,
+.navbar .search-bar {
+	background-color: rgba(255, 255, 255, 0.15) !important;
+	border-color: rgba(255, 255, 255, 0.25) !important;
+}
+.navbar .navbar-search-bar *,
+.navbar .search-bar * {
+	color: #FFFFFF !important;
+}
+/* The search trigger keeps its own light pill background (unaffected by the
+   rule above — real wrapper class wasn't confirmed, so scoping broadly here
+   to whatever <input> actually sits inside .navbar) — white placeholder text
+   on that light pill was unreadable, same failure mode as other light-pill
+   spots. Grey, not white, regardless of the exact wrapper class. */
+.navbar input::placeholder {
+	color: var(--pt-text-secondary) !important;
+	opacity: 1;
+}
+.navbar .global-search-shortcut-key,
+.navbar .help-item-escape {
+	color: rgba(255, 255, 255, 0.65) !important;
+	border-color: rgba(255, 255, 255, 0.3) !important;
+}
+.btn-primary {
+	background-color: var(--pt-primary) !important;
+	border-color: var(--pt-primary) !important;
+}
+.btn-primary:hover {
+	background-color: var(--pt-primary-dark) !important;
+	border-color: var(--pt-primary-dark) !important;
+}
+a, .text-primary {
+	color: var(--pt-primary);
+}
+.indicator-pill.blue, .indicator.blue {
+	background-color: rgba(31, 111, 168, 0.15);
+	color: var(--pt-primary-dark);
+}
+
+/* ---------------------------------------------------------------------------
+   2. Sidebar / workspace switcher
+   (frappe/public/js/frappe/ui/sidebar/sidebar.html + sidebar_item.html)
+   --------------------------------------------------------------------------- */
+.body-sidebar {
+	/* Icon color comes from --icon-stroke (frappe/public/scss/common/icons.scss
+	   sets stroke/fill: var(--icon-stroke) on every sidebar SVG icon — the
+	   `color` property alone never reaches it). Setting it here means every
+	   icon in the sidebar — default, hover, and active/selected — stays white,
+	   in every state, without having to re-declare it per state. */
+	--icon-stroke: #FFFFFF !important;
+	background-color: var(--pt-sidebar-solid) !important;
+	border-right: 1px solid var(--pt-primary-dark);
+}
+
+/* Default state: all sidebar text white. */
+.body-sidebar .standard-sidebar-item,
+.body-sidebar .sidebar-item-label,
+.body-sidebar .item-anchor {
+	color: #FFFFFF !important;
+}
+
+/* Hover/active/selected: core still renders its own near-white pill behind
+   the row (--sidebar-hover-color / --sidebar-active-color, untouched here) —
+   white text on that light pill is invisible, so switch text to grey there.
+   Icon follows the same grey (overriding --icon-stroke locally) instead of
+   staying white, which was invisible-ish on the light pill. */
+.body-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+.body-sidebar .standard-sidebar-item:hover .item-anchor,
+.body-sidebar .active-sidebar .sidebar-item-label,
+.body-sidebar .active-sidebar .item-anchor,
+.body-sidebar .active-sidebar,
+.body-sidebar .sidebar-item-container.selected .sidebar-item-label,
+.body-sidebar .sidebar-item-container.selected .item-anchor {
+	color: var(--pt-text-secondary) !important;
+}
+.body-sidebar .standard-sidebar-item:hover,
+.body-sidebar .active-sidebar,
+.body-sidebar .sidebar-item-container.selected {
+	--icon-stroke: var(--pt-text-secondary) !important;
+}
+/* Hard fallback in case something downstream reads currentColor/fill/stroke
+   directly instead of --icon-stroke — force it at the SVG itself so hover/
+   active icons can't stay white regardless of which mechanism the icon uses. */
+.body-sidebar .standard-sidebar-item:hover .sidebar-item-icon svg,
+.body-sidebar .standard-sidebar-item:hover .sidebar-item-icon svg use,
+.body-sidebar .standard-sidebar-item:hover .sidebar-item-icon svg path,
+.body-sidebar .active-sidebar .sidebar-item-icon svg,
+.body-sidebar .active-sidebar .sidebar-item-icon svg use,
+.body-sidebar .active-sidebar .sidebar-item-icon svg path,
+.body-sidebar .sidebar-item-container.selected .sidebar-item-icon svg,
+.body-sidebar .sidebar-item-container.selected .sidebar-item-icon svg use,
+.body-sidebar .sidebar-item-container.selected .sidebar-item-icon svg path {
+	stroke: var(--pt-text-secondary) !important;
+	color: var(--pt-text-secondary) !important;
+}
+
+.body-sidebar .active-sidebar,
+.body-sidebar .sidebar-item-container.selected > .standard-sidebar-item {
+	border-left: 3px solid var(--pt-primary);
+	border-radius: 6px;
+}
+
+/* App switcher header ("Assets / ERPNext" card at the top of the sidebar).
+   Real markup: frappe/public/js/frappe/ui/sidebar/sidebar_header.html.
+   Resting state sits directly on the blue sidebar (white text). Frappe adds
+   a `.hover` class on mouseover and `.active-sidebar` while its dropdown is
+   open (sidebar_header.js setup_hover/toggle_active) — only THEN does it
+   render as a light pill, same as any other sidebar row, so text needs to
+   flip to grey in that state only (mirrors .standard-sidebar-item below). */
+.body-sidebar .sidebar-header .header-title {
+	color: #FFFFFF !important;
+}
+.body-sidebar .sidebar-header .header-subtitle {
+	color: rgba(255, 255, 255, 0.75) !important;
+}
+.body-sidebar .sidebar-header .drop-icon {
+	--icon-stroke: #FFFFFF !important;
+}
+.body-sidebar .sidebar-header.hover .header-title,
+.body-sidebar .sidebar-header.active-sidebar .header-title {
+	color: var(--pt-ink) !important;
+}
+.body-sidebar .sidebar-header.hover .header-subtitle,
+.body-sidebar .sidebar-header.active-sidebar .header-subtitle {
+	color: var(--pt-text-secondary) !important;
+}
+.body-sidebar .sidebar-header.hover .drop-icon,
+.body-sidebar .sidebar-header.active-sidebar .drop-icon {
+	--icon-stroke: var(--pt-text-secondary) !important;
+}
+
+/* generic Frappe text-color utility class, as used on sidebar item icons/labels */
+.body-sidebar .text-ink-gray-7 {
+	color: #FFFFFF !important;
+}
+
+/* "Getting Started" bottom link — not a .standard-sidebar-item, plain <a>/<span> markup */
+.body-sidebar .onboarding-sidebar,
+.body-sidebar .onboarding-sidebar span {
+	color: #FFFFFF !important;
+}
+
+/* Collapse/expand toggle — sits in its own light circle (var(--surface-menu-bar)),
+   so it needs its icon dark/blue instead of the sidebar-wide white --icon-stroke,
+   or it's invisible on its own light background. */
+.body-sidebar .sidebar-toggle-btn {
+	--icon-stroke: var(--pt-primary) !important;
+}
+
+/* navbar user-avatar dropdown, opened from the sidebar footer when expanded */
+.body-sidebar-container.expanded .body-sidebar .dropdown-navbar-user {
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.body-sidebar::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------------------------------------------------------------------------
+   3. Module / shortcut tiles (Workspace shortcut widgets)
+   (frappe/public/scss/desk/desktop.scss .shortcut-widget-box,
+    frappe/public/js/frappe/widgets/shortcut_widget.js)
+   --------------------------------------------------------------------------- */
+.widget.shortcut-widget-box {
+	border-radius: 2px;
+	border: 1px solid var(--pt-border-soft);
+}
+.widget.shortcut-widget-box .indicator-pill.blue {
+	background-color: rgba(31, 111, 168, 0.12);
+	color: var(--pt-primary-dark);
+}
+
+/* ---------------------------------------------------------------------------
+   4. List view filter bar
+   (frappe/public/js/frappe/list/base_list.js .standard-filter-section,
+    frappe/public/js/frappe/ui/sort_selector.html)
+   --------------------------------------------------------------------------- */
+.standard-filter-section .frappe-control input.form-control,
+.standard-filter-section .frappe-control .awesomplete input {
+	border-radius: 6px;
+	background-color: var(--pt-sidebar-bg);
+	border: 1px solid var(--pt-border);
+}
+.standard-filter-section .frappe-control input.form-control:focus {
+	border-color: var(--pt-primary);
+	box-shadow: 0 0 0 3px rgba(31, 111, 168, 0.15);
+	background-color: var(--pt-surface);
+}
+.standard-filter-section .fa-search,
+.standard-filter-section .octicon-search,
+.standard-filter-section [class*="icon-search"] {
+	color: var(--pt-primary);
+}
+
+.filter-selector .filter-button,
+.sort-selector .sort-selector-button,
+.sort-selector .btn-order {
+	border: 1px solid var(--pt-border);
+	border-radius: 6px;
+	background-color: var(--pt-surface);
+}
+.filter-selector .filter-button:hover,
+.sort-selector .sort-selector-button:hover,
+.sort-selector .btn-order:hover {
+	border-color: var(--pt-primary);
+	color: var(--pt-primary);
+	background-color: rgba(31, 111, 168, 0.06);
+}
+
+/* Generic transparent icon-buttons (…, filter, sort) — light blue tint on hover */
+.btn-icon:hover,
+.icon-btn:hover,
+.list-sidebar .list-link:hover {
+	background-color: rgba(31, 111, 168, 0.08);
+}
+
+/* ---------------------------------------------------------------------------
+   5. Dashboard — Number Card / Chart widgets
+   (frappe/public/js/frappe/widgets/base_widget.js .widget,
+    number_card_widget.js .number-widget-box, chart_widget.js .dashboard-widget-box)
+   --------------------------------------------------------------------------- */
+/* NOTE: deliberately no `position: relative` / `overflow: hidden` here — the
+   widget's "..." menu (.widget-control .dropdown-menu) is positioned relative
+   to this card, and clipping/repositioning it via overflow/position broke the
+   dropdown when opened. No hover color/lift effect — resting style only. */
+.widget.number-widget-box,
+.widget.dashboard-widget-box {
+	border-radius: 2px;
+	border: 1px solid var(--pt-border-soft);
+	box-shadow: 0 1px 2px rgba(20, 25, 34, 0.05);
+}
+
+/* decorative brand badge, top-right of the card head — no markup change needed */
+.widget.number-widget-box .widget-head::after,
+.widget.dashboard-widget-box .widget-head::after {
+	content: "";
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: radial-gradient(circle at 30% 30%, var(--pt-accent), var(--pt-primary));
+	flex: 0 0 auto;
+	align-self: center;
+	margin-left: 8px;
+}
+
+.widget.number-widget-box .number {
+	color: var(--pt-primary) !important;
+}
+.widget .widget-title {
+	color: var(--pt-ink);
+}
+.widget .widget-subtitle {
+	color: var(--pt-text-muted);
+}
+
+/* chart card chrome (gridlines / axis text) — frappe-charts reads these vars where supported */
+.dashboard-widget-box .chart-container svg .chart-label,
+.dashboard-widget-box .chart-container svg .y.axis text,
+.dashboard-widget-box .chart-container svg .x.axis text {
+	fill: var(--pt-text-muted);
+}
+.dashboard-widget-box .chart-container svg .y.axis .specific-value line,
+.dashboard-widget-box .chart-container svg line.dashed {
+	stroke: var(--pt-border);
+}
+/* NOTE: individual series line/bar fill colors are set per-chart in JS (frappe-charts
+   `colors` option), not via CSS — a global stylesheet can't repaint those without
+   patching each chart's render call. Card chrome above is fully themed; series color
+   is not. */
+
+/* period/filter pills on chart cards */
+.dashboard-widget-box .chart-filter .btn,
+.dashboard-widget-box .widget-control .btn {
+	border-radius: 999px;
+	border: 1px solid var(--pt-border);
+}
+.dashboard-widget-box .chart-filter .btn.active,
+.dashboard-widget-box .chart-filter .btn:hover {
+	background-color: rgba(31, 111, 168, 0.10);
+	border-color: var(--pt-primary);
+	color: var(--pt-primary-dark);
+}
+
+/* ---------------------------------------------------------------------------
+   6. Workspace page background + scoped dark-mode override
+   (verified: [data-page-route="Workspaces"] in desktop.scss;
+    theme resolves to <html data-theme="dark|light"> in theme_switcher.js)
+   --------------------------------------------------------------------------- */
+[data-page-route="Workspaces"] .layout-main-section {
+	background-color: var(--pt-surface);
+}
+
+/* Forced-light scope: home/workspace background + number cards + chart cards.
+   Sidebar and navbar are intentionally left alone here so they keep following
+   the user's dark-mode toggle (open item in the design brief — extend this
+   block to `.navbar, .body-sidebar` later if that gets decided). */
+html[data-theme="dark"] [data-page-route="Workspaces"] .layout-main-section,
+html[data-theme="dark"] .widget.number-widget-box,
+html[data-theme="dark"] .widget.dashboard-widget-box {
+	background-color: var(--pt-surface) !important;
+	border-color: var(--pt-border-soft) !important;
+}
+html[data-theme="dark"] .widget.number-widget-box .widget-title,
+html[data-theme="dark"] .widget.number-widget-box .widget-subtitle,
+html[data-theme="dark"] .widget.number-widget-box .number,
+html[data-theme="dark"] .widget.dashboard-widget-box .widget-title,
+html[data-theme="dark"] .widget.dashboard-widget-box .widget-subtitle,
+html[data-theme="dark"] .widget.dashboard-widget-box .chart-legend,
+html[data-theme="dark"] .widget.dashboard-widget-box .chart-container {
+	color: var(--pt-ink) !important;
+}
+html[data-theme="dark"] .widget.number-widget-box .number {
+	color: var(--pt-primary) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   7. Login / website pages
+   (frappe/www/login.html: .for-login, .app-logo, .email-field/.password-field,
+    .field-icon, .btn-login, .btn-login-with-email-link)
+   --------------------------------------------------------------------------- */
+.for-login .login-content {
+	border-top: 4px solid var(--pt-primary);
+	border-radius: 12px;
+}
+.for-login .app-logo {
+	max-height: 56px;
+	width: auto;
+}
+.for-login .form-control {
+	border-radius: 8px;
+	padding-left: 2.25rem;
+}
+.for-login .email-field .field-icon,
+.for-login .password-field .field-icon {
+	color: var(--pt-primary);
+	opacity: 0.8;
+}
+.for-login .form-control:focus {
+	border-color: var(--pt-primary);
+	box-shadow: 0 0 0 3px rgba(31, 111, 168, 0.15);
+}
+/* !important here: login.bundle.css compiles a more specific nested rule for
+   .btn-login (confirmed by screenshot — button stayed black without this) */
+.for-login .btn-login {
+	background-color: var(--pt-primary) !important;
+	border-color: var(--pt-primary) !important;
+	color: #fff !important;
+	border-radius: 8px;
+}
+.for-login .btn-login:hover {
+	background-color: var(--pt-primary-dark) !important;
+	border-color: var(--pt-primary-dark) !important;
+}
+.for-login .btn-login-with-email-link,
+.for-login .btn-login-option {
+	background-color: var(--pt-sidebar-bg) !important;
+	border-color: var(--pt-border) !important;
+	color: var(--pt-ink) !important;
+	border-radius: 8px;
+}
+.for-login .btn-login-with-email-link:hover,
+.for-login .btn-login-option:hover {
+	background-color: var(--pt-border-soft);
+}
+.for-login .pt-login-footer {
+	text-align: center;
+	color: var(--pt-text-muted);
+	font-size: 12px;
+	margin-top: 16px;
+}
+
+/* ===========================================================================
+   8. Admin-dashboard layer (Ant-Design-inspired chrome, brand colors kept)
+   Additive only — refines buttons, dropdowns, list rows/pagination and form
+   controls app-wide. Selectors verified against apps/frappe v16 source
+   (list_view.js, base_list.js, toolbar.js, base_control.js, base_input.js,
+   page.js, indicator.scss).
+   =========================================================================== */
+
+/* Buttons — rounded, consistent weight; .btn-primary already handled in §1 */
+.btn {
+	border-radius: 6px;
+	font-weight: 500;
+}
+.btn-default {
+	background-color: var(--pt-surface);
+	border-color: var(--pt-border);
+	color: var(--pt-ink);
+}
+.btn-default:hover {
+	border-color: var(--pt-primary);
+	color: var(--pt-primary);
+	background-color: rgba(31, 111, 168, 0.05);
+}
+.icon-btn:hover {
+	background-color: rgba(31, 111, 168, 0.08);
+	border-radius: 6px;
+}
+
+/* Dropdown menus (navbar user menu, help/search dropdown, list filter menus) */
+.dropdown-menu {
+	border-radius: 10px;
+	border: 1px solid var(--pt-border-soft);
+	box-shadow: 0 6px 24px rgba(20, 25, 34, 0.10);
+	padding: 6px;
+}
+.dropdown-menu .dropdown-item {
+	border-radius: 6px;
+	padding: 6px 10px;
+}
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+	background-color: rgba(31, 111, 168, 0.08);
+	color: var(--pt-primary-dark);
+}
+
+/* List view rows + pagination */
+.list-row-head {
+	background-color: var(--pt-sidebar-bg);
+	color: var(--pt-text-secondary);
+	border-radius: 8px 8px 0 0;
+}
+.list-row-container:hover {
+	background-color: rgba(31, 111, 168, 0.04);
+}
+.list-row-container .list-row-checkbox:checked {
+	accent-color: var(--pt-primary);
+}
+.list-paging-area .btn-more {
+	border-radius: 999px;
+	border-color: var(--pt-border);
+}
+.list-paging-area .btn-more:hover {
+	border-color: var(--pt-primary);
+	color: var(--pt-primary);
+}
+
+/* Form controls, app-wide (Desk forms + report/list filters share this markup) */
+.frappe-control .control-input input.form-control,
+.frappe-control .control-input textarea.form-control,
+.frappe-control .control-input select.form-control {
+	border-radius: 6px;
+	border-color: var(--pt-border);
+}
+.frappe-control .control-input input.form-control:focus,
+.frappe-control .control-input textarea.form-control:focus,
+.frappe-control .control-input select.form-control:focus {
+	border-color: var(--pt-primary);
+	box-shadow: 0 0 0 3px rgba(31, 111, 168, 0.12);
+}
+
+/* Status/tag pills — used across list rows, filters and widgets */
+.indicator-pill {
+	border-radius: 999px;
+	font-weight: 500;
+}

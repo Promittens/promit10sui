@@ -1,9 +1,16 @@
 app_name = "promit10sui"
-app_title = "promit10sUI"
-app_publisher = "akshay"
-app_description = "promit10sUI"
+app_title = "Promittens Technologies"
+app_publisher = "Promittens Technologies"
+app_description = "Custom Desk theme, branding and navigation for Promittens Technologies"
 app_email = "akshaykrish264@gmail.com"
 app_license = "mit"
+
+app_logo_url = "/assets/promit10sui/images/icon-64.png"
+
+website_context = {
+	"favicon": "/assets/promit10sui/images/favicon.ico",
+	"splash_image": "/assets/promit10sui/images/splash.png",
+}
 
 # Apps
 # ------------------
@@ -25,12 +32,15 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/promit10sui/css/promit10sui.css"
-# app_include_js = "/assets/promit10sui/js/promit10sui.js"
+# NOTE: ?v=N is a manual cache-buster — these are plain files (not esbuild
+# bundles), so browsers can hold onto a stale copy indefinitely otherwise.
+# Bump N whenever promit10sui.css/js changes.
+app_include_css = "/assets/promit10sui/css/promit10sui.css?v=16"
+app_include_js = "/assets/promit10sui/js/promit10sui.js?v=16"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/promit10sui/css/promit10sui.css"
-# web_include_js = "/assets/promit10sui/js/promit10sui.js"
+web_include_css = "/assets/promit10sui/css/promit10sui.css?v=16"
+web_include_js = "/assets/promit10sui/js/promit10sui.js?v=16"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "promit10sui/public/scss/website"
@@ -52,6 +62,11 @@ app_license = "mit"
 # ------------------
 # include app icons in desk
 # app_include_icons = "promit10sui/public/icons.svg"
+
+# Boot Session
+# ------------------
+# push brand tokens (colors, logo paths) to frappe.boot for promit10sui.js
+extend_bootinfo = "promit10sui.boot.boot_session"
 
 # Home Pages
 # ----------
@@ -86,7 +101,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "promit10sui.install.before_install"
-# after_install = "promit10sui.install.after_install"
+after_install = "promit10sui.install.after_install"
 
 # Uninstallation
 # ------------
@@ -183,9 +198,10 @@ app_license = "mit"
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "promit10sui.event.get_events"
-# }
+override_whitelisted_methods = {
+	"frappe.apps.get_apps": "promit10sui.api.branding.get_apps",
+	"frappe.utils.change_log.get_versions": "promit10sui.api.branding.get_versions",
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
