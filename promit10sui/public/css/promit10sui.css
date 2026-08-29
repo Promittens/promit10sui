@@ -506,3 +506,132 @@ html[data-theme="dark"] .widget.number-widget-box .number {
 	border-radius: 999px;
 	font-weight: 500;
 }
+
+
+/* ---------------------------------------------------------------------------
+   9. Desktop home grid (Frappe v16 "Desktop Icon" screen — frappe/desk/page/
+   desktop/desktop.css .desktop-icon / .icon-container) restyled from a
+   compact icon+label tile into a bordered card with icon + title +
+   description. The description text itself doesn't exist in Frappe's markup
+   (desktop_icon.html only renders icon + title) — it's injected client-side
+   by promit10sui.js on the "desktop_screen" event, into a .pt-icon-desc div
+   this CSS positions. Tile count, grouping and labels are untouched — this
+   is presentation-only, layered on the native drag/hide/folder system.
+   --------------------------------------------------------------------------- */
+/* .icons.icons doubles the class weight so this out-specificities Frappe's
+   own responsive rules (which force 2/3 fixed columns under ~1000px via
+   nested selectors) instead of depending on load order to win the tie. */
+.desktop-container .icons.icons {
+	display: grid !important;
+	grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+	gap: 18px !important;
+	justify-items: stretch !important;
+}
+@media (max-width: 900px) {
+	.desktop-container .icons.icons {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+}
+@media (max-width: 560px) {
+	.desktop-container .icons.icons {
+		grid-template-columns: 1fr !important;
+	}
+}
+.desktop-container .desktop-icon {
+	width: auto !important;
+	height: auto !important;
+	min-height: 128px;
+	/*flex-direction: row !important;*/
+	align-items: flex-start !important;
+	justify-content: flex-start !important;
+	gap: 14px !important;
+	padding: 18px !important;
+	border-radius: 12px !important;
+	border: 1px solid var(--pt-border-soft, #edf1f5) !important;
+	border-style: solid !important;
+	background-color: var(--pt-surface, #fff);
+	box-shadow: 0 1px 2px rgba(20, 25, 34, 0.05);
+	transition: box-shadow 0.12s ease, border-color 0.12s ease, transform 0.12s ease !important;
+}
+.desktop-container .desktop-icon:hover {
+	transform: translateY(-2px) !important;
+	border-color: var(--pt-primary, #1f6fa8) !important;
+	box-shadow: 0 8px 20px rgba(20, 25, 34, 0.12) !important;
+}
+/* Folder-type tiles (e.g. Accounting) render a nested mini-grid of their own
+   child icons inside .icon-container (desktop.js render_folder_thumbnail())
+   using its own sizing vars — forcing 42px/none here clipped that nested
+   grid down to nothing, leaving the tile blank. Excluding .folder-icon
+   leaves folders on their native sizing; only plain/image icons get resized. */
+.desktop-container .icon-container:not(.folder-icon) {
+	flex: 0 0 auto;
+	width: 42px !important;
+	height: 42px !important;
+	border-radius: 10px !important;
+	box-shadow: none !important;
+}
+.desktop-container .icon-container:not(.folder-icon) img {
+	width: 42px !important;
+	height: 42px !important;
+}
+.desktop-container .icon-container.folder-icon {
+	flex: 0 0 auto;
+}
+.desktop-container .icon-caption {
+	flex: 1 1 auto;
+	min-width: 0 !important; /* flex children default to min-width:auto, which
+		blocks shrinking below content size and pushes text past the card
+		edge instead of wrapping — this is what actually fixes the overflow */
+	height: auto !important;
+	min-height: 0 !important;
+	text-align: left !important;
+	align-items: flex-start !important;
+	gap: 4px;
+}
+.desktop-container .icon-title {
+	white-space: normal !important;
+	text-overflow: clip !important;
+	overflow: visible !important;
+	overflow-wrap: break-word;
+	text-transform: uppercase;
+	font-size: 12px !important;
+	letter-spacing: 0.03em;
+	color: var(--pt-ink, #141922);
+}
+.desktop-container .pt-icon-desc {
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--pt-text-muted, #888780);
+	overflow-wrap: break-word;
+}
+/* Edit-mode "remove" (X) button: native CSS anchors it with a hardcoded
+   `left: 108px`, computed for the original 127px-wide square tile. Our card
+   is much wider now, so that fixed offset lands mid-card instead of the
+   corner — anchor from the right edge instead, which works at any width. */
+.desktop-container .hide-button {
+	top: 8px !important;
+	left: auto !important;
+	right: 8px !important;
+}
+
+.widget-group .widget {
+  border-radius: 12px !important;
+  border: 1px solid #e5e3dc !important;
+  box-shadow: none !important;
+  background: #ffffff !important;
+  padding: 16px !important;
+  transition: border-color 0.15s ease;
+}
+.widget-group .widget:hover {
+  border-color: #c9c6bb !important;
+}
+.widget-group .widget-head .widget-icon {
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+.widget-group .widget-head .widget-label {
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+.desk-body { background: #faf9f6 !important; }
