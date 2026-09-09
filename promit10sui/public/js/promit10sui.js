@@ -31,21 +31,60 @@ $(document).on("app_ready", function () {
 // that instead of a one-time page-load listener, or descriptions vanish the
 // next time the grid redraws.
 const PT_DESKTOP_ICON_DESCRIPTIONS = {
-	Framework: "Developer tools, custom apps and site build settings.",
-	Organization: "Company structure, departments and internal settings.",
-	"Promittens CRM": "Leads, deals and customer relationships.",
 	Accounting: "Chart of accounts, invoicing, payments and financial reports.",
 	Assets: "Track and depreciate company assets.",
 	Buying: "Purchase orders, suppliers and procurement.",
-	Manufacturing: "Production plans, work orders and bill of materials.",
+	CRM: "Leads, deals and customer relationships.",
+	HRMS: "Employees, leave, payroll and attendance.",
 	Projects: "Tasks, timesheets and project tracking.",
-	Quality: "Quality inspections and procedures.",
 	Selling: "Quotations, sales orders and customers.",
 	Stock: "Inventory, warehouses and stock movement.",
-	Subcontracting: "Outsourced manufacturing orders.",
-	"Promittens Settings": "Company, tax and system-wide ERP settings.",
-	"Promittens HR": "Employees, leave, payroll and attendance.",
 };
+
+const PT_DESKTOP_ICON_IMAGES = Object.fromEntries(
+	Object.keys(PT_DESKTOP_ICON_DESCRIPTIONS).map((label) => [
+		label,
+		`/assets/promit10sui/images/desktop/${label}.jpeg`,
+	])
+);
+const PT_DESKTOP_ICON_LABELS = {
+	"Promittens CRM": "CRM",
+	"Promittens HR": "HRMS",
+	"Frappe HR": "HRMS",
+};
+
+function pt_customize_desktop_icons() {
+	document.querySelectorAll(".desktop-container .desktop-icon").forEach((icon) => {
+		const rawLabel =
+			icon.getAttribute("data-id") ||
+			icon.querySelector(".icon-title")?.textContent.trim();
+		const label = PT_DESKTOP_ICON_LABELS[rawLabel] || rawLabel;
+		if (!PT_DESKTOP_ICON_IMAGES[label]) {
+			icon.remove();
+			return;
+		}
+		const title = icon.querySelector(".icon-title");
+		if (title) {
+			title.textContent = label;
+			title.setAttribute("data-original-title", label);
+		}
+
+		let container = icon.querySelector(":scope > .icon-container");
+		if (!container) {
+			container = document.createElement("div");
+			container.className = "icon-container";
+			icon.prepend(container);
+		}
+		container.className = "icon-container";
+		container.replaceChildren();
+
+		const image = document.createElement("img");
+		image.className = "app-icon";
+		image.src = PT_DESKTOP_ICON_IMAGES[label];
+		image.alt = label;
+		container.appendChild(image);
+	});
+}
 
 function pt_add_desktop_icon_descriptions() {
 	document.querySelectorAll(".desktop-icon .icon-title").forEach((titleEl) => {
@@ -67,7 +106,10 @@ $(document).on("desktop_screen", function () {
 	// desktop.js finishes wiring up the grid synchronously before this fires,
 	// but tooltips/labels are set in the same tick — a micro-delay avoids a
 	// race where our div gets read before class names settle.
-	setTimeout(pt_add_desktop_icon_descriptions, 0);
+	setTimeout(() => {
+		pt_customize_desktop_icons();
+		pt_add_desktop_icon_descriptions();
+	}, 0);
 });
 
 // Login page: swap logo (page renders before frappe.boot is populated) and

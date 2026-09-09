@@ -371,12 +371,15 @@ html[data-theme="dark"] .widget.number-widget-box .number {
     .field-icon, .btn-login, .btn-login-with-email-link)
    --------------------------------------------------------------------------- */
 .for-login .login-content {
-	border-top: 4px solid var(--pt-primary);
 	border-radius: 12px;
 }
 .for-login .app-logo {
-	max-height: 56px;
-	width: auto;
+	display: block;
+	width: 180px !important;
+	height: auto !important;
+	max-width: 100%;
+	max-height: none;
+	margin: 0 auto 16px;
 }
 .for-login .form-control {
 	border-radius: 8px;
