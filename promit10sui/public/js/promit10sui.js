@@ -4,6 +4,30 @@
 // (favicon swap, navbar logo src, document title).
 frappe.provide("promit10sui");
 
+// Filter the desktop profile menu before Frappe creates its menu instance.
+const pt_create_menu = frappe.ui.create_menu;
+frappe.ui.create_menu = function (opts) {
+	if ($(opts.parent).is(".desktop-avatar")) {
+		opts = {
+			...opts,
+			menu_items: opts.menu_items.filter((item) => item.label !== "Frappe Support"),
+		};
+	}
+	return pt_create_menu.call(this, opts);
+};
+
+// Frappe emits this document event after the dialog is attached and shown.
+// Bootstrap's earlier show event can fire while the wrapper is detached.
+$(document).on("frappe.ui.Dialog:shown", function () {
+	const dialog = frappe.ui.misc?.about_dialog;
+	if (!dialog) return;
+	$(dialog.wrapper).find(".about-frappe-wordmark").attr({
+		src: "/assets/promit10sui/images/prommittensLOGO.png",
+		alt: "Prommittens Technologies",
+	}).css({ height: "64px", width: "auto", maxWidth: "100%", objectFit: "contain", filter: "none" });
+	$(dialog.wrapper).find(".about-footer").text("© Prommittens Technologies Pvt. Ltd. and contributors");
+});
+
 // Navbar app icon itself is fixed server-side now (promit10sui.boot forces
 // every bootinfo.app_data[] entry's app_logo_url — that's what Frappe's
 // navbar actually renders from, keyed by whichever app is currently active).
@@ -44,7 +68,8 @@ const PT_DESKTOP_ICON_DESCRIPTIONS = {
 const PT_DESKTOP_ICON_IMAGES = Object.fromEntries(
 	Object.keys(PT_DESKTOP_ICON_DESCRIPTIONS).map((label) => [
 		label,
-		`/assets/promit10sui/images/desktop/${label}.jpeg`,
+		// `/assets/promit10sui/images/desktop/${label}.jpeg`,
+		`/assets/promit10sui/images/prommittensicon.png`,
 	])
 );
 const PT_DESKTOP_ICON_LABELS = {
@@ -103,6 +128,10 @@ function pt_add_desktop_icon_descriptions() {
 }
 
 $(document).on("desktop_screen", function () {
+	$(".desktop-navbar .navbar-home #brand-logo").attr({
+		src: "/assets/promit10sui/images/prommittensicon.png",
+		alt: "Prommittens Technologies",
+	});
 	// desktop.js finishes wiring up the grid synchronously before this fires,
 	// but tooltips/labels are set in the same tick — a micro-delay avoids a
 	// race where our div gets read before class names settle.
