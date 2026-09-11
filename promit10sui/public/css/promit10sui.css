@@ -643,6 +643,7 @@ html[data-theme="dark"] .widget.number-widget-box .number {
 .desk-body { background: #faf9f6 !important; }
 
 /* About: hide the framework tagline and its version row. */
+.pt-legacy-about .app-version[title^="frappe:"],
 .about-dialog .about-tagline,
 .about-dialog .about-info-row:has(#about-framework-version) {
 	display: none !important;

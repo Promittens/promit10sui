@@ -18,9 +18,20 @@ frappe.ui.create_menu = function (opts) {
 
 // Frappe emits this document event after the dialog is attached and shown.
 // Bootstrap's earlier show event can fire while the wrapper is detached.
-$(document).on("frappe.ui.Dialog:shown", function () {
+$(document).on("frappe.ui.Dialog:shown shown.bs.modal", function () {
 	const dialog = frappe.ui.misc?.about_dialog;
 	if (!dialog) return;
+	// Frappe 16.9 uses plain paragraphs instead of the newer About classes.
+	const body = $(dialog.body);
+	if (!body.find(".about-frappe-wordmark").length) {
+		dialog.set_title(__("About"));
+		$(dialog.wrapper).addClass("pt-legacy-about");
+		body.find(" > div > p").first().remove();
+		body.find(" > div").prepend(
+			'<div style="text-align:center;margin-bottom:16px"><img class="about-frappe-wordmark"></div>'
+		);
+		body.find(" > div > p.text-muted").last().addClass("about-footer");
+	}
 	$(dialog.wrapper).find(".about-frappe-wordmark").attr({
 		src: "/assets/promit10sui/images/prommittensLOGO.png",
 		alt: "Prommittens Technologies",

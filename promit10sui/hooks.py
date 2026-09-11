@@ -35,12 +35,12 @@ website_context = {
 # NOTE: ?v=N is a manual cache-buster — these are plain files (not esbuild
 # bundles), so browsers can hold onto a stale copy indefinitely otherwise.
 # Bump N whenever promit10sui.css/js changes.
-app_include_css = "/assets/promit10sui/css/promit10sui.css?v=32"
-app_include_js = "/assets/promit10sui/js/promit10sui.js?v=35"
+app_include_css = "/assets/promit10sui/css/promit10sui.css?v=33"
+app_include_js = "/assets/promit10sui/js/promit10sui.js?v=36"
 
 # include js, css files in header of web template
-web_include_css = "/assets/promit10sui/css/promit10sui.css?v=32"
-web_include_js = "/assets/promit10sui/js/promit10sui.js?v=35"
+web_include_css = "/assets/promit10sui/css/promit10sui.css?v=33"
+web_include_js = "/assets/promit10sui/js/promit10sui.js?v=36"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "promit10sui/public/scss/website"
