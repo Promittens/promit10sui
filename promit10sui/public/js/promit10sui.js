@@ -80,15 +80,13 @@ const PT_DESKTOP_ICON_LABELS = {
 
 function pt_customize_desktop_icons() {
 	document.querySelectorAll(".desktop-container .desktop-icon").forEach((icon) => {
-		const rawLabel =
-			icon.getAttribute("data-id") ||
-			icon.querySelector(".icon-title")?.textContent.trim();
-		const label = PT_DESKTOP_ICON_LABELS[rawLabel] || rawLabel;
-		if (!PT_DESKTOP_ICON_IMAGES[label]) {
-			icon.remove();
-			return;
-		}
 		const title = icon.querySelector(".icon-title");
+		const label = [icon.getAttribute("data-id"), title?.textContent]
+			.map((value) => value?.trim())
+			.map((value) => PT_DESKTOP_ICON_LABELS[value] || value)
+			.find((value) => Object.hasOwn(PT_DESKTOP_ICON_IMAGES, value));
+		// Branding must never remove modules supplied by the site's desktop settings.
+		if (!label) return;
 		if (title) {
 			title.textContent = label;
 			title.setAttribute("data-original-title", label);
