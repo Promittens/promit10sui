@@ -139,6 +139,39 @@ $(document).on("desktop_screen", function () {
 	}, 0);
 });
 
+// Also handle desktops rendered before this script loads, and menus created
+// by versions of Frappe that do not use the desktop_screen event.
+$(function () {
+	function customize_rendered_desktop() {
+		pt_customize_desktop_icons();
+		pt_add_desktop_icon_descriptions();
+	}
+	function remove_support_menu_item() {
+		document.querySelectorAll(".frappe-menu .menu-item-title").forEach((title) => {
+			if (title.textContent.trim() === __("Frappe Support")) {
+				title.closest(".dropdown-menu-item")?.remove();
+			}
+		});
+	}
+	customize_rendered_desktop();
+	remove_support_menu_item();
+	const observer = new MutationObserver((records) => {
+		let desktop_added = false;
+		let menu_added = false;
+		for (const record of records) {
+			for (const node of record.addedNodes) {
+				if (node.nodeType !== 1) continue;
+				desktop_added ||= node.matches(".desktop-icon") || !!node.querySelector(".desktop-icon");
+				menu_added ||= node.matches(".frappe-menu, .menu-item-title") ||
+					!!node.querySelector(".menu-item-title");
+			}
+		}
+		if (desktop_added) customize_rendered_desktop();
+		if (menu_added) remove_support_menu_item();
+	});
+	observer.observe(document.body, { childList: true, subtree: true });
+});
+
 // Login page: swap logo (page renders before frappe.boot is populated) and
 // add the "Powered by" footer. Leading icons and input styling are handled
 // in CSS — login.html already ships .field-icon markup, no need to inject it.
