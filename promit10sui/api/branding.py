@@ -3,6 +3,7 @@ import frappe.apps
 import frappe.utils.change_log
 
 APP_TITLE_OVERRIDES = {
+	"frappe": "Promittens",
 	"erpnext": "PromittensERP",
 	"hrms": "Promittens HR",
 }

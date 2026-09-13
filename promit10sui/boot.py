@@ -35,6 +35,7 @@ def boot_session(bootinfo):
 	# context is active, and survives Desk's SPA route changes since Frappe
 	# re-reads this same list on every navigation rather than re-fetching it.
 	app_title_overrides = {
+		"frappe": "Promittens",
 		"erpnext": "PromittensERP",
 		"hrms": "Promittens HR",
 	}

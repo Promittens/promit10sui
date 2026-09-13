@@ -76,13 +76,7 @@ const PT_DESKTOP_ICON_DESCRIPTIONS = {
 	Stock: "Inventory, warehouses and stock movement.",
 };
 
-const PT_DESKTOP_ICON_IMAGES = Object.fromEntries(
-	Object.keys(PT_DESKTOP_ICON_DESCRIPTIONS).map((label) => [
-		label,
-		// `/assets/promit10sui/images/desktop/${label}.jpeg`,
-		`/assets/promit10sui/images/prommittensicon.png`,
-	])
-);
+const PT_DESKTOP_ICON_IMAGE = "/assets/promit10sui/images/prommittensicon.png";
 const PT_DESKTOP_ICON_LABELS = {
 	"Promittens CRM": "CRM",
 	"Promittens HR": "HRMS",
@@ -95,12 +89,15 @@ function pt_customize_desktop_icons() {
 		const label = [icon.getAttribute("data-id"), title?.textContent]
 			.map((value) => value?.trim())
 			.map((value) => PT_DESKTOP_ICON_LABELS[value] || value)
-			.find((value) => Object.hasOwn(PT_DESKTOP_ICON_IMAGES, value));
+			.find(Boolean);
 		// Branding must never remove modules supplied by the site's desktop settings.
 		if (!label) return;
 		if (title) {
-			title.textContent = label;
-			title.setAttribute("data-original-title", label);
+			const display_label = pt_brand_text(label);
+			if (title.textContent !== display_label) title.textContent = display_label;
+			if (title.getAttribute("data-original-title") !== display_label) {
+				title.setAttribute("data-original-title", display_label);
+			}
 		}
 
 		let container = icon.querySelector(":scope > .icon-container");
@@ -109,12 +106,14 @@ function pt_customize_desktop_icons() {
 			container.className = "icon-container";
 			icon.prepend(container);
 		}
+		if (container.children.length === 1 &&
+			container.firstElementChild?.getAttribute("src") === PT_DESKTOP_ICON_IMAGE) return;
 		container.className = "icon-container";
 		container.replaceChildren();
 
 		const image = document.createElement("img");
 		image.className = "app-icon";
-		image.src = PT_DESKTOP_ICON_IMAGES[label];
+		image.src = PT_DESKTOP_ICON_IMAGE;
 		image.alt = label;
 		container.appendChild(image);
 	});
@@ -200,5 +199,44 @@ $(function () {
 		footer.className = "pt-login-footer";
 		footer.textContent = "Powered by Promittens Technologies";
 		el.appendChild(footer);
+	});
+});
+
+// Brand rendered UI only: keep API names, URLs, record values and editable
+// content intact. Observe later dialogs, route changes and document titles too.
+function pt_brand_text(value) {
+	return value.replace(/\bERPNext\b/g, "PromittensERP").replace(/\bFrappe\b/g, "Promittens");
+}
+
+$(function () {
+	const excluded = "script, style, noscript, pre, code, [contenteditable]:not([contenteditable='false']), .ace_editor, .CodeMirror";
+	function brand_node(node) {
+		if (node.nodeType === Node.TEXT_NODE) {
+			if (!node.parentElement || node.parentElement.closest(`${excluded}, textarea, input, select, option`)) return;
+			const branded = pt_brand_text(node.nodeValue);
+			if (branded !== node.nodeValue) node.nodeValue = branded;
+			return;
+		}
+		if (node.nodeType !== Node.ELEMENT_NODE || node.closest(excluded)) return;
+		for (const attr of ["title", "alt", "placeholder", "aria-label", "data-original-title"]) {
+			const value = node.getAttribute(attr);
+			if (value && pt_brand_text(value) !== value) node.setAttribute(attr, pt_brand_text(value));
+		}
+		if (node.matches("textarea, input, select, option")) return;
+		for (const child of node.childNodes) brand_node(child);
+	}
+	brand_node(document.documentElement);
+	const branding_observer = new MutationObserver((records) => {
+		for (const record of records) {
+			if (record.type === "childList") {
+				for (const node of record.addedNodes) brand_node(node);
+			} else {
+				brand_node(record.target);
+			}
+		}
+	});
+	branding_observer.observe(document.documentElement, {
+		subtree: true, childList: true, characterData: true, attributes: true,
+		attributeFilter: ["title", "alt", "placeholder", "aria-label", "data-original-title"],
 	});
 });

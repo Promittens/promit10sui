@@ -373,6 +373,10 @@ html[data-theme="dark"] .widget.number-widget-box .number {
 .for-login .login-content {
 	border-radius: 12px;
 }
+/* Hide the login heading in both legacy and current login templates. */
+.for-login .page-card-head h4 {
+	display: none !important;
+}
 .for-login .app-logo {
 	display: block;
 	width: 180px !important;
